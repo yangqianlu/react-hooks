@@ -1,35 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react';
-// function Counter() {
-//   const [count, setCount] = useState(0);
+import React, { useEffect, useCallback, useRef, useState } from 'react';
 
-//   const prevCountRef = useRef();
-//   useEffect(() => {
-//     prevCountRef.current = count;
-//   });
-//   const prevCount = prevCountRef.current;
+// 测量dom
+// function MeasureExample() {
+//   const [height, setHeight] = useState(0);
 
-//   return <>
-//     <h1>Now: {count}, before: {prevCount}</h1>
-//     <button onClick={() => setCount(count + 1)}>点击加1</button>
-//   </>
+//   const measuredRef = useCallback(node => {
+//     if (node !== null) {
+//       setHeight(node.getBoundingClientRect().height);
+//     }
+//   }, []);
+
+//   return (
+//     <>
+//       <h1 ref={measuredRef}>Hello, world</h1>
+//       <h2>The above header is {Math.round(height)}px tall</h2>
+//     </>
+//   );
 // }
-// export default Counter
-
-// 可以将获取上一轮的 props 或 state抽取成一个自定义 Hook
-function usePrevious(value) {
-  let ref = useRef()
-  useEffect(() => {
-    ref.current = value
-  })
-  return ref.current
+//抽取出来 可复用的hook
+function useClientRect() {
+  const [rect, setRect] = useState(0);
+  const ref = useCallback(node => {
+    if (node !== null) {
+      setRect(node.getBoundingClientRect());
+    }
+  }, []);
+  return [ref, rect]
+}
+function MeasureExample() {
+  let [ref, rect] = useClientRect()
+  return (
+    <>
+      <h1 style={{ height: 60 }} ref={ref}>Hello, world</h1>
+      <h2>The above header is {Math.round(rect.height)}px tall</h2>
+    </>
+  );
 }
 
-function Counter() {
-  const [count, setCount] = useState(0);
-  const prevCount = usePrevious(count);
-  return <>
-    <h1>Now: {count}, before: {prevCount}</h1>
-    <button onClick={() => setCount(count + 1)}>点击加1</button></>;
-}
-
-export default Counter
+export default MeasureExample

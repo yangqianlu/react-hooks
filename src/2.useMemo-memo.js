@@ -31,4 +31,19 @@ function App() {
     </div>
   );
 }
+//useMemo 也允许你跳过一次子节点的昂贵的重新渲染：
+// function Parent({ a, b }) {
+//   const child1 = useMemo(() => <Child1 a={a} />, [a]);
+//   // Only re-rendered if `b` changes:
+//   const child2 = useMemo(() => <Child2 b={b} />, [b]);
+//   return (
+//     <>
+//       {child1}
+//       {child2}
+//     </>
+//   )
+// }
+// 注意这种方式在循环中是无效的，因为 Hook 调用 不能 被放在循环中。但你可以为列表项抽取一个单独的组件，并在其中调用 useMemo。
+
+
 export default App;
